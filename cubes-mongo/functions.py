@@ -32,7 +32,19 @@ _aggregate_functions = {
     'custom': {
         'group_by' : (lambda field: { '$sum': 1 }),
         'aggregate_fn': len
-    }
+    },
+    'min': {
+	'group_by': (lambda field: { '$min': "$%s" % field }),
+        'aggregate_fn': min,
+    },
+    'max': {
+        'group_by': (lambda field: { '$max': "$%s" % field }),
+        'aggregate_fn': max,
+    },
+    'avg': {
+        'group_by': (lambda field: { '$avg': "$%s" % field }),
+        'aggregate_fn': sum,
+    },
 }
 
 

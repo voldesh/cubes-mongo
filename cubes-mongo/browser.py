@@ -404,7 +404,7 @@ class MongoBrowser(AggregationBrowser):
             elif function:
                 group_applicator = function["group_by"]
 		if agg.measure:
-                	group = group_applicator(escape_level(agg.measure))
+			group = group_applicator(escape_level(agg.measure))
 		else:
 			group = group_applicator(escape_level(agg.ref()))
             else:
@@ -424,6 +424,7 @@ class MongoBrowser(AggregationBrowser):
 
         pipeline.append({ "$match": query_obj })
         pipeline.append({ "$group": group_obj })
+
 	if fields_obj:
             pipeline.append({ "$project": fields_obj })
 
@@ -445,10 +446,7 @@ class MongoBrowser(AggregationBrowser):
         result_items = []
         self.logger.debug("PIPELINE: %s", pipeline)
 
-	if float(pymongo.version) < 3.0:
-        	results = self.data_store.aggregate(pipeline).get('result', [])
-	else:
-		results = self.data_store.aggregate(pipeline)
+        results = self.data_store.aggregate(pipeline).get('result', [])
         results = [date_transform(r) for r in results]
 
         if timezone_shift_processing:

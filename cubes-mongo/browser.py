@@ -442,7 +442,10 @@ class MongoBrowser(AggregationBrowser):
         result_items = []
         self.logger.debug("PIPELINE: %s", pipeline)
 
-        results = self.data_store.aggregate(pipeline).get('result', [])
+	if float(pymongo.version) < 3.0:
+        	results = self.data_store.aggregate(pipeline).get('result', [])
+	else:
+		results = self.data_store.aggregate(pipeline)
         results = [date_transform(r) for r in results]
 
         if timezone_shift_processing:

@@ -403,7 +403,10 @@ class MongoBrowser(AggregationBrowser):
                 group = phys.group
             elif function:
                 group_applicator = function["group_by"]
-                group = group_applicator(escape_level(agg.measure.ref()))
+		if agg.measure:
+                	group = group_applicator(escape_level(agg.measure))
+		else:
+			group = group_applicator(escape_level(agg.ref()))
             else:
                 raise ModelError("Neither function or mapping group specified "
                                  "for aggregate '%s' in cube '%s'"
@@ -420,9 +423,9 @@ class MongoBrowser(AggregationBrowser):
             pipeline = []
 
         pipeline.append({ "$match": query_obj })
-        if fields_obj:
-            pipeline.append({ "$project": fields_obj })
         pipeline.append({ "$group": group_obj })
+	if fields_obj:
+            pipeline.append({ "$project": fields_obj })
 
         if not timezone_shift_processing:
             if order:
